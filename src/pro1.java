@@ -5,8 +5,6 @@ import java.util.*;
 public class pro1 {
     public static node root1;
     public static ArrayList <node> scope_info = new ArrayList <node>();
-    //return 参数多CE
-    //变量声明不是原子变量CE
     public static void dfs(node now,int i)throws Exception{
         //System.out.print('(');
         //System.out.print(i);
@@ -49,7 +47,6 @@ public class pro1 {
         //System.out.print(now.name);
         //System.out.print(')');
     }
-    //全局函数和类的名字检查
     public static void dfs1(node now,int i) throws Exception{
         if (now.type.equals("class")){
             varname newname = new varname();
@@ -79,7 +76,6 @@ public class pro1 {
             }
         }
     }
-    //类内函数的名字检查
     public static void dfs2(node now,int i) throws Exception{
         if (now.type.equals("class")){
             for (node item:now.son){
@@ -106,7 +102,6 @@ public class pro1 {
             }
         }
     }
-    //函数的input记录
     public static void dfs3(node now,int i) throws Exception{
         if (now.type.equals("class")){
             ////System.out.println(now.name);
@@ -155,7 +150,6 @@ public class pro1 {
             }
         }
     }
-    //所有的scope登记
     public static void dfs4(node now,int i) throws Exception{
         if (now.has_scope){
             scope_info.add(now);
@@ -210,9 +204,7 @@ public class pro1 {
             scope_info.remove(scope_info.size() - 1);
         }
     }
-    //expression 的 type 计算
     public static void dfs5(node now,int i) throws Exception{
-        //先序访问
         if (now.has_scope){
             scope_info.add(now);
         }
@@ -226,7 +218,6 @@ public class pro1 {
             //Nothing to do
         }
 
-        //递归调用
 
         if (now.type.equals("variable")|| now.type.equals("input_variable")) {
             for (int j = 0;j < now.son.size(); ++j){
@@ -252,7 +243,6 @@ public class pro1 {
                 dfs5(item,i+1);
             }
         }
-        //后序访问
         if (now.type.equals("atom")){
             if (now.name.equals("this")){
                 if (scope_info.size()>=3&&scope_info.get(1).type.equals("class")
