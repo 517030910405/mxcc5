@@ -161,7 +161,7 @@ public class pro1 {
             scope_info.add(now);
         }
         if (now.type.equals("variable")||now.type.equals("input_variable")){
-            if (!now.son.get(1).type.equals("")){
+            if (now.son.get(1).type.equals("int")||now.son.get(1).type.equals("string")){
                 throw new Exception("Variable is not const");
             }
             varname newname = new varname();
