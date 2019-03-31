@@ -847,8 +847,8 @@ public class pro1 {
 
     public static void main(String[] args) throws IOException , Exception {
         try {
-            InputStream is = new FileInputStream("example/4.txt"); // or System.in;
-            //InputStream is = new FileInputStream("program.txt"); // or System.in;
+            //InputStream is = new FileInputStream("example/4.txt"); // or System.in;
+            InputStream is = new FileInputStream("program.txt"); // or System.in;
             //InputStream is = System.in; // or System.in;
             ANTLRInputStream input = new ANTLRInputStream(is);
             MxLexer lexer = new MxLexer(input);
