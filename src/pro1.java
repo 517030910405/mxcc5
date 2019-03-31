@@ -161,7 +161,7 @@ public class pro1 {
             scope_info.add(now);
         }
         if (now.type.equals("variable")||now.type.equals("input_variable")){
-            if (now.son.get(1).type.equals("int")||now.son.get(1).type.equals("string")){
+            if (now.son.get(1).data_type.equals("int")||now.son.get(1).data_type.equals("string")){
                 throw new Exception("Variable is not const");
             }
             varname newname = new varname();
@@ -545,6 +545,9 @@ public class pro1 {
                     if (!func_namespace.type.equals("function")){
                         throw new Exception("function Error4");
                     }
+                    if (func_namespace.input_variable_type.size()+1!=now.son.size()){
+                        throw new Exception("function Error5");
+                    }
                     for (int k = 0;k < func_namespace.input_variable_type.size(); ++k){
                         if (!(func_namespace.input_variable_type.get(k).equals(now.son.get(k+1).data_type)&&
                                 func_namespace.input_variable_array_dim.get(k)==now.son.get(k+1).data_array_dim)){
@@ -651,6 +654,9 @@ public class pro1 {
             //To be done
         }
         if (now.type.equals("variable")){
+            if (scope_info.get(scope_info.size()-1).scope.get(now.son.get(1).name).type.equals("void")){
+                throw new Exception("void variable Error");
+            }
             if (now.son.size()==3){
                 varname typea = scope_info.get(scope_info.size()-1).scope.get(now.son.get(1).name);
                 if ((!((typea.type.equals("int")||typea.type.equals("string"))&&typea.array_dim==0))
@@ -659,9 +665,6 @@ public class pro1 {
                 if (!(typea.type.equals(now.son.get(2).data_type)
                         &&typea.array_dim == now.son.get(2).data_array_dim)){
                     throw new Exception("variable Error");
-                }
-                if (typea.name.equals("void")){
-                    throw new Exception("void variable Error");
                 }
             }
         }
@@ -847,8 +850,8 @@ public class pro1 {
 
     public static void main(String[] args) throws IOException , Exception {
         try {
-            //InputStream is = new FileInputStream("example/4.txt"); // or System.in;
-            InputStream is = new FileInputStream("program.txt"); // or System.in;
+            InputStream is = new FileInputStream("example/4.txt"); // or System.in;
+            //InputStream is = new FileInputStream("program.txt"); // or System.in;
             //InputStream is = System.in; // or System.in;
             ANTLRInputStream input = new ANTLRInputStream(is);
             MxLexer lexer = new MxLexer(input);
@@ -953,8 +956,8 @@ public class pro1 {
         } catch (Throwable eee){
             //throw new Exception("Well");
             System.err.println("CE");
-            //throw eee;
-            System.exit(-1);
+            throw eee;
+            //System.exit(-1);
         }
         System.out.println("OK");
     }
