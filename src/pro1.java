@@ -5,25 +5,27 @@ import java.util.*;
 public class pro1 {
     public static node root1;
     public static ArrayList <node> scope_info = new ArrayList <node>();
+    //return with too many arguments CE
+    //assign is not atom
     public static void dfs(node now,int i)throws Exception{
-        //System.out.print('(');
-        //System.out.print(i);
-        //System.out.print(',');
-        //System.out.print(now.type);
-        //System.out.print(',');
-        //System.out.print(now.name);
+        System.out.print('(');
+        System.out.print(i);
+        System.out.print(',');
+        System.out.print(now.type);
+        System.out.print(',');
+        System.out.print(now.name);
         if (!now.data_type.equals("")) {
-            //System.out.print("[" + now.data_type + "]");
+            System.out.print("[" + now.data_type + "]");
         }
-        //System.out.print(',');
+        System.out.print(',');
         for (node item:now.son){
             dfs(item,i+1);
         }
         if (now.type.equals("return")){
             if (now.son.size()>1){
-                //System.out.println();
-                //System.out.println("CE");
-                //System.out.println();
+                System.out.println();
+                System.out.println("CE");
+                System.out.println();
                 throw new Exception("CE_return");
             }
         }
@@ -42,11 +44,12 @@ public class pro1 {
                 throw new Exception("Variable Declaim CE");
             }
         }
-        //System.out.print(now.type);
-        //System.out.print(',');
-        //System.out.print(now.name);
-        //System.out.print(')');
+        System.out.print(now.type);
+        System.out.print(',');
+        System.out.print(now.name);
+        System.out.print(')');
     }
+    //global function & class name
     public static void dfs1(node now,int i) throws Exception{
         if (now.type.equals("class")){
             varname newname = new varname();
@@ -57,7 +60,7 @@ public class pro1 {
                 throw new Exception("Class Name");
             }
             root1.scope.put(now.name,newname);
-            ////System.out.println(now.name);
+            //System.out.println(now.name);
         }
         if (now.type.equals("function")){
             varname newname = new varname();
@@ -69,13 +72,14 @@ public class pro1 {
             }
             root1.scope.put(now.name,newname);
         }
-        ////System.out.println(now.type);
+        //System.out.println(now.type);
         if (i<=0){
             for (node item:now.son){
                 dfs1(item,i+1);
             }
         }
     }
+    //sub function name
     public static void dfs2(node now,int i) throws Exception{
         if (now.type.equals("class")){
             for (node item:now.son){
@@ -84,7 +88,7 @@ public class pro1 {
                     newname.type = "function";
                     newname.name = item.name;
                     newname.location = item;
-                    ////System.out.println(item.name);
+                    //System.out.println(item.name);
                     if (now.scope.containsKey(newname.name)){
                         throw new Exception("CE_Name_Function");
                     }
@@ -95,16 +99,17 @@ public class pro1 {
                 }
             }
         }
-        ////System.out.println(now.type);
+        //System.out.println(now.type);
         if (i<=0){
             for (node item:now.son){
                 dfs2(item,i+1);
             }
         }
     }
+    //input of function
     public static void dfs3(node now,int i) throws Exception{
         if (now.type.equals("class")){
-            ////System.out.println(now.name);
+            //System.out.println(now.name);
         }
         if (now.type.equals("function")){
             {
@@ -140,21 +145,25 @@ public class pro1 {
                 if (!thistype.type.equals("class")){
                     throw new Exception(nowson.name+"Is Not A Type");
                 }
-                ////System.out.println(nowson.name);
+                //System.out.println(nowson.name);
             }
         }
-        ////System.out.println(now.type);
+        //System.out.println(now.type);
         if ((i<=0)||(now.type.equals("class"))){
             for (node item:now.son){
                 dfs3(item,i+1);
             }
         }
     }
+    //all scope
     public static void dfs4(node now,int i) throws Exception{
         if (now.has_scope){
             scope_info.add(now);
         }
         if (now.type.equals("variable")||now.type.equals("input_variable")){
+            if (!now.son.get(1).type.equals("")){
+                throw new Exception("Variable is not const");
+            }
             varname newname = new varname();
             newname.name = now.son.get(1).name;
             node nowtype = now.son.get(0);
@@ -167,8 +176,8 @@ public class pro1 {
             newname.type = nowtype.name;
             newname.location = now;
             if (!root1.scope.containsKey(newname.type)){
-                //System.out.println();
-                //System.out.println(newname.type);
+                System.out.println();
+                System.out.println(newname.type);
                 throw new Exception("Invalid Type");
             }
             if (!root1.scope.get(newname.type).type.equals("class")){
@@ -178,13 +187,13 @@ public class pro1 {
                 throw new Exception("Variable Name Invalid");
             }
             {
-                //System.out.print("");
-                /*//System.out.print(newname.name);
-                //System.out.print(" ");
-                //System.out.print(newname.type);
-                //System.out.print(" ");
-                //System.out.print(newname.array_dim);
-                //System.out.println();*/
+                System.out.print("");
+                /*System.out.print(newname.name);
+                System.out.print(" ");
+                System.out.print(newname.type);
+                System.out.print(" ");
+                System.out.print(newname.array_dim);
+                System.out.println();*/
             }
             if (scope_info.get(0).scope.containsKey(newname.name)&&
                     (scope_info.get(0).scope.get(newname.name).type.equals("class")
@@ -204,20 +213,23 @@ public class pro1 {
             scope_info.remove(scope_info.size() - 1);
         }
     }
+    //expression's type
     public static void dfs5(node now,int i) throws Exception{
+        //head
         if (now.has_scope){
             scope_info.add(now);
         }
-        //System.out.print(now.type);
-        //System.out.print(" ");
-        //System.out.print(now.name);
-        //System.out.print(" ");
-        //System.out.println(scope_info.size());
+        System.out.print(now.type);
+        System.out.print(" ");
+        System.out.print(now.name);
+        System.out.print(" ");
+        System.out.println(scope_info.size());
         if (now.type.equals("variable")|| now.type.equals("input_variable")){
             //scope_info.get(scope_info.size()-1).scope.get(now.son.get(1).name).activate =true;
             //Nothing to do
         }
 
+        //middle
 
         if (now.type.equals("variable")|| now.type.equals("input_variable")) {
             for (int j = 0;j < now.son.size(); ++j){
@@ -243,6 +255,7 @@ public class pro1 {
                 dfs5(item,i+1);
             }
         }
+        //tail
         if (now.type.equals("atom")){
             if (now.name.equals("this")){
                 if (scope_info.size()>=3&&scope_info.get(1).type.equals("class")
@@ -254,7 +267,7 @@ public class pro1 {
             }
             if (now.data_type.equals("")){
                 int j=scope_info.size()-1;
-                //System.out.println(now.name);
+                System.out.println(now.name);
                 while (j>=0&&((!scope_info.get(j).scope.containsKey(now.name))
                         ||(!scope_info.get(j).scope.get(now.name).activate))){
                     j=j-1;
@@ -280,7 +293,7 @@ public class pro1 {
                     now.data_array_dim = 0;
                     now.left_value = false;
                 }else {
-                    //System.out.println("["+now.son.get(0).data_type+"]");
+                    System.out.println("["+now.son.get(0).data_type+"]");
                     throw new Exception("Expression Type Error: operator = "+now.name);
                 }
             } else
@@ -647,7 +660,9 @@ public class pro1 {
                         &&typea.array_dim == now.son.get(2).data_array_dim)){
                     throw new Exception("variable Error");
                 }
-
+                if (typea.name.equals("void")){
+                    throw new Exception("void variable Error");
+                }
             }
         }
         if (now.type.equals("for")){
@@ -663,6 +678,7 @@ public class pro1 {
         }
         if (now.type.equals("while")){
             if (now.son.get(0).data_type.equals("bool")&&now.son.get(1).data_array_dim==0){
+                System.out.println("not bool");
                 //Nothing
             } else{
                 throw new Exception("not bool in while");
@@ -710,9 +726,9 @@ public class pro1 {
                 }
             } else {
 
-                //System.out.println("ERROR");
-                //System.out.println(scope_info.get(j).output_variable_type);
-                //System.out.println(now.son.get(0).data_type);
+                System.out.println("ERROR");
+                System.out.println(scope_info.get(j).output_variable_type);
+                System.out.println(now.son.get(0).data_type);
                 throw new Exception("CE: return3");
             }
         }
@@ -726,18 +742,18 @@ public class pro1 {
     }
     public static void view1(node now,int i)throws Exception{
         for (int j=0;j<i;++j){
-            //System.out.print("    ");
+            System.out.print("    ");
         }
-        //System.out.print(now.type + " " + now.name);
+        System.out.print(now.type + " " + now.name);
         if (now.type.equals("function")){
-            //System.out.print(" "+now.output_variable_type+" ");
-            //System.out.print(now.output_variable_array_dim);
+            System.out.print(" "+now.output_variable_type+" ");
+            System.out.print(now.output_variable_array_dim);
             for (int j=0;j<now.input_variable_type.size();++j){
-                //System.out.print(" "+now.input_variable_type.get(j)+" ");
-                //System.out.print(now.input_variable_array_dim.get(j));
+                System.out.print(" "+now.input_variable_type.get(j)+" ");
+                System.out.print(now.input_variable_array_dim.get(j));
             }
         }
-        //System.out.println();
+        System.out.println();
         for (HashMap.Entry<String,varname> item:now.scope.entrySet()){
             if (item.getValue().location!=null){
                 view1(item.getValue().location,i+1);
@@ -746,9 +762,9 @@ public class pro1 {
     }
     public static void view2(node now,int i) throws Exception{
         if (now.has_scope){
-            //System.out.print(now.name);
-            //System.out.print("-");
-            //System.out.println(now.type);
+            System.out.print(now.name);
+            System.out.print("-");
+            System.out.println(now.type);
         }
         for (node item:now.son){
             view2(item,i+1);
@@ -756,33 +772,33 @@ public class pro1 {
     }
     public static void view3(node now,int i)throws Exception{
         for (int j=0;j<i;++j){
-            //System.out.print("    ");
+            System.out.print("    ");
         }
-        //System.out.print(now.type + " " + now.name);
+        System.out.print(now.type + " " + now.name);
         if (now.type.equals("function")){
-            //System.out.print(" "+now.output_variable_type+" ");
-            //System.out.print(now.output_variable_array_dim);
+            System.out.print(" "+now.output_variable_type+" ");
+            System.out.print(now.output_variable_array_dim);
             for (int j=0;j<now.input_variable_type.size();++j){
-                //System.out.print(" "+now.input_variable_type.get(j)+" ");
-                //System.out.print(now.input_variable_array_dim.get(j));
+                System.out.print(" "+now.input_variable_type.get(j)+" ");
+                System.out.print(now.input_variable_array_dim.get(j));
             }
         }
-        //System.out.println();
+        System.out.println();
         if (now.has_scope){
             for (int j=0;j<i;++j){
-                //System.out.print("    ");
+                System.out.print("    ");
             }
-            //System.out.print(" ");
+            System.out.print(" ");
             for (varname item:now.scope.values()){
-                //System.out.print("(");
-                //System.out.print(item.type);
-                //System.out.print(" ");
-                //System.out.print(item.name);
-                //System.out.print(" ");
-                //System.out.print(item.array_dim);
-                //System.out.print(")");
+                System.out.print("(");
+                System.out.print(item.type);
+                System.out.print(" ");
+                System.out.print(item.name);
+                System.out.print(" ");
+                System.out.print(item.array_dim);
+                System.out.print(")");
             }
-            //System.out.println();
+            System.out.println();
         }
         for (HashMap.Entry<String,varname> item:now.scope.entrySet()){
             if (item.getValue().location!=null){
@@ -793,32 +809,32 @@ public class pro1 {
     public static void view4(node now,int i)throws Exception{
         if (now.has_scope){
             for (int j=0;j<i;++j){
-                //System.out.print("    ");
+                System.out.print("    ");
             }
-            //System.out.print(now.type + " " + now.name);
+            System.out.print(now.type + " " + now.name);
             if (now.type.equals("function")){
-                //System.out.print(" "+now.output_variable_type+" ");
-                //System.out.print(now.output_variable_array_dim);
+                System.out.print(" "+now.output_variable_type+" ");
+                System.out.print(now.output_variable_array_dim);
                 for (int j=0;j<now.input_variable_type.size();++j){
-                    //System.out.print(" "+now.input_variable_type.get(j)+" ");
-                    //System.out.print(now.input_variable_array_dim.get(j));
+                    System.out.print(" "+now.input_variable_type.get(j)+" ");
+                    System.out.print(now.input_variable_array_dim.get(j));
                 }
             }
-            //System.out.println();
+            System.out.println();
             for (int j=0;j<i;++j){
-                //System.out.print("    ");
+                System.out.print("    ");
             }
-            //System.out.print(" ");
+            System.out.print(" ");
             for (varname item:now.scope.values()){
-                //System.out.print("(");
-                //System.out.print(item.type);
-                //System.out.print(" ");
-                //System.out.print(item.name);
-                //System.out.print(" ");
-                //System.out.print(item.array_dim);
-                //System.out.print(")");
+                System.out.print("(");
+                System.out.print(item.type);
+                System.out.print(" ");
+                System.out.print(item.name);
+                System.out.print(" ");
+                System.out.print(item.array_dim);
+                System.out.print(")");
             }
-            //System.out.println();
+            System.out.println();
         }
         for (node item:now.son){
             if (now.has_scope) {
@@ -831,8 +847,8 @@ public class pro1 {
 
     public static void main(String[] args) throws IOException , Exception {
         try {
-            //InputStream is = new FileInputStream("example/1.txt"); // or System.in;
-            InputStream is = new FileInputStream("program.txt"); // or System.in;
+            InputStream is = new FileInputStream("example/4.txt"); // or System.in;
+            //InputStream is = new FileInputStream("program.txt"); // or System.in;
             //InputStream is = System.in; // or System.in;
             ANTLRInputStream input = new ANTLRInputStream(is);
             MxLexer lexer = new MxLexer(input);
@@ -840,17 +856,17 @@ public class pro1 {
             MxParser parser = new MxParser(tokens);
             ParseTree tree = parser.mx(); // calc is the starting rule
 
-            //System.out.println("LISP:");
-            //System.out.println(tree.toStringTree(parser));
-            //System.out.println();
+            System.out.println("LISP:");
+            System.out.println(tree.toStringTree(parser));
+            System.out.println();
 
-            //System.out.println("Visitor:");
+            System.out.println("Visitor:");
             EvalVisitor evalByVisitor = new EvalVisitor();
             root1 = evalByVisitor.visit(tree);
-            ////System.out.println();
-            dfs(root1, 0);
             //System.out.println();
-            //System.out.println("----");
+            dfs(root1, 0);
+            System.out.println();
+            System.out.println("----");
             //--------------------------------
             {
                 {
@@ -908,28 +924,36 @@ public class pro1 {
                     root1.scope.put(newname.name, newname);
                 }
             }
-            //System.out.println("dfs1");
+            System.out.println("dfs1");
             dfs1(root1, 0);
-            //System.out.println("dfs2");
+            System.out.println("dfs2");
             dfs2(root1, 0);
-            ////System.out.println();
-            //System.out.println("dfs3");
+            //System.out.println();
+            System.out.println("dfs3");
             dfs3(root1, 0);
-            //System.out.println("view1");
+            System.out.println("view1");
             view1(root1, 0);
-            //System.out.println("view2");
+            System.out.println("view2");
             view2(root1, 0);
-            //System.out.println("dfs4");
+            System.out.println("dfs4");
             dfs4(root1, 0);
-            //System.out.println("view3");
+            System.out.println("view3");
             view3(root1, 0);
-            //System.out.println("view4");
+            System.out.println("view4");
             view4(root1, 0);
-            //System.out.println("dfs5");
+            System.out.println("dfs5");
             dfs5(root1, 0);
+            if(root1.son.size()==0){
+                throw new Exception("Empty");
+            }
+            if(!root1.scope.containsKey("main")){
+                throw new Exception("No Main");
+            }
+
         } catch (Throwable eee){
             //throw new Exception("Well");
             System.err.println("CE");
+            //throw eee;
             System.exit(-1);
         }
         System.out.println("OK");
@@ -939,8 +963,8 @@ public class pro1 {
         if (now.has_scope){
             scope_info.add(now);
             for (node item:scope_info){
-                //System.out.print(item.name);
-                //System.out.print(" ");
+                System.out.print(item.name);
+                System.out.print(" ");
             }
         }
         if (now.has_scope){

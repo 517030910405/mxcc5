@@ -273,7 +273,7 @@ public class EvalVisitor extends MxBaseVisitor<node> {
         node node2 = visit(ctx.singstat());
         ans.son.add(node1);
         ans.son.add(node2);
-        return visitChildren(ctx);
+        return ans;
     }
     /**
      * {@inheritDoc}
